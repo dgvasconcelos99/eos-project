@@ -73,6 +73,4 @@ describe('CommentsService', () => {
       }
     });
   });
-
-  // Add more test cases for other methods of the CommentsService.
 });

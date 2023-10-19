@@ -75,7 +75,7 @@ export class PostsService {
     return await this.postRepository.softDelete(id);
   }
 
-  async like(id: string): Promise<void> {
+  async like(user, id: string): Promise<void> {
     const searchPost = await this.findOne(id);
     if (!searchPost.id) throw new NotFoundException('Post not found');
     await this.postRepository.update(id, {

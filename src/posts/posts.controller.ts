@@ -51,4 +51,10 @@ export class PostsController {
   remove(@Req() req, @Param('id') id: string) {
     return this.postsService.remove(id, req.user);
   }
+
+  @UseGuards(AuthGuard)
+  @Post('like/:postId')
+  likePost(@Req() req, @Param('postId') id: string) {
+    return this.postsService.like(req.user, id);
+  }
 }

@@ -1,7 +1,12 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { Repository, UpdateResult } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostEntity } from './entities/post.entity';
 import { UsersService } from 'src/users/users.service';
@@ -50,18 +55,32 @@ export class PostsService {
     return posts;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: string): Promise<PostEntity> {
+    const post = await this.postRepository.findOne({ where: { id } });
+
+    return post;
   }
 
   async update(
-    id: number,
+    id: string,
     updatePostDto: UpdatePostDto,
   ): Promise<UpdateResult> {
     return await this.postRepository.update(id, updatePostDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: string, user: any): Promise<DeleteResult> {
+    const searchPost = await this.findOne(id);
+    if (user.sub !== searchPost.userId)
+      throw new UnauthorizedException('Operation not permitted');
+    return await this.postRepository.softDelete(id);
+  }
+
+  async like(id: string): Promise<void> {
+    const searchPost = await this.findOne(id);
+    if (!searchPost.id) throw new NotFoundException('Post not found');
+    await this.postRepository.update(id, {
+      likes: ++searchPost.likes,
+    });
+    return;
   }
 }

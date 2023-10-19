@@ -14,13 +14,14 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { ValidationPipe } from 'src/pipes/validation.pipe';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
+  create(@Body(new ValidationPipe()) createPostDto: CreatePostDto) {
     return this.postsService.create(createPostDto);
   }
 
@@ -38,7 +39,7 @@ export class PostsController {
   update(
     @Req() req,
     @Param('id') id: string,
-    @Body() updatePostDto: UpdatePostDto,
+    @Body(new ValidationPipe()) updatePostDto: UpdatePostDto,
   ) {
     const user = req.user;
     if (user.userId !== req.params.id)

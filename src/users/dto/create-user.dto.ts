@@ -5,18 +5,18 @@ export class CreateUserDto {
   @MaxLength(100, {
     message: 'Name is too long',
   })
-  readonly name: string;
+  name: string;
 
   @IsString()
   @IsEmail()
   @MaxLength(191, {
     message: 'Email is too long',
   })
-  readonly email: string;
+  email: string;
 
   @IsString()
   @MinLength(4, {
     message: 'Password should have at least 4 characters',
   })
-  readonly password: string;
+  password: string;
 }

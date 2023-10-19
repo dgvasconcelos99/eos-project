@@ -1,11 +1,18 @@
 import { PostEntity } from 'src/posts/entities/post.entity';
 import { UserEntity } from 'src/users/entities/users.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({ name: 'comments' })
 export class CommentEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @ManyToOne(() => PostEntity)
   post: PostEntity;
@@ -14,5 +21,15 @@ export class CommentEntity {
   user: UserEntity;
 
   @Column()
-  description: string;
+  comment: string;
+
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    name: 'created_at',
+  })
+  createdAt: string;
+
+  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+  updatedAt: string;
 }

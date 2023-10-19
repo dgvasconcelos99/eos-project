@@ -1,4 +1,4 @@
-import { IsNumber, IsString, MaxLength } from 'class-validator';
+import { IsString, MaxLength } from 'class-validator';
 
 export class CreatePostDto {
   @IsString()
@@ -14,7 +14,4 @@ export class CreatePostDto {
     each: true,
   })
   hashtags: string[];
-
-  @IsNumber()
-  likes: number;
 }

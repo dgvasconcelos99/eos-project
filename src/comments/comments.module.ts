@@ -4,6 +4,7 @@ import { CommentsController } from './comments.controller';
 import { PostsModule } from 'src/posts/posts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommentEntity } from './entities/comment.entity';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   controllers: [CommentsController],
@@ -11,6 +12,7 @@ import { CommentEntity } from './entities/comment.entity';
   imports: [
     TypeOrmModule.forFeature([CommentEntity]),
     forwardRef(() => PostsModule),
+    forwardRef(() => UsersModule),
   ],
   exports: [CommentsService],
 })

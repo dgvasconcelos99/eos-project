@@ -6,10 +6,17 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import 'dotenv/config';
 import { UsersController } from './users/users.controller';
-import { UserEntity } from './users/users.entity';
+import { UserEntity } from './users/entities/users.entity';
+import { ConfigModule } from '@nestjs/config';
+import { PostsModule } from './posts/posts.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env.develop',
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
@@ -19,9 +26,12 @@ import { UserEntity } from './users/users.entity';
       database: process.env.POSTGRES_DATABASE,
       entities: [UserEntity],
       synchronize: process.env.NODE_ENV === 'development',
+      autoLoadEntities: true,
     }),
     AuthModule,
     UsersModule,
+    PostsModule,
+    CommentsModule,
   ],
   controllers: [AppController, UsersController],
   providers: [AppService],

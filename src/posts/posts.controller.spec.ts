@@ -4,6 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreatePostDto } from 'src/posts/dto/create-post.dto';
 import { PostEntity } from 'src/posts/entities/post.entity';
 import { PostsService } from 'src/posts/posts.service';
+import { UsersModule } from 'src/users/users.module';
 import { Repository } from 'typeorm';
 
 describe('PostsService', () => {
@@ -12,6 +13,7 @@ describe('PostsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [UsersModule],
       providers: [
         PostsService,
         {
@@ -22,9 +24,6 @@ describe('PostsService', () => {
     }).compile();
 
     postsService = module.get<PostsService>(PostsService);
-    postRepository = module.get<Repository<PostEntity>>(
-      getRepositoryToken(PostEntity),
-    );
   });
 
   it('should be defined', () => {
@@ -65,7 +64,7 @@ describe('PostsService', () => {
       };
 
       jest
-        .spyOn(postsService['usersService'], 'findOneById')
+        .spyOn(postsService['postsService'], 'findOneById')
         .mockResolvedValue(null);
 
       try {

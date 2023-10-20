@@ -5,6 +5,9 @@ import { CreateCommentDto } from 'src/comments/dto/create-comment.dto';
 import { CommentEntity } from 'src/comments/entities/comment.entity';
 import { CommentsService } from 'src/comments/comments.service';
 import { Repository } from 'typeorm';
+import { CommentsController } from 'src/comments/comments.controller';
+import { PostsModule } from 'src/posts/posts.module';
+import { UsersModule } from 'src/users/users.module';
 
 describe('CommentsService', () => {
   let commentsService: CommentsService;
@@ -19,6 +22,8 @@ describe('CommentsService', () => {
           useClass: Repository,
         },
       ],
+      controllers: [CommentsController],
+      imports: [PostsModule, UsersModule],
     }).compile();
 
     commentsService = module.get<CommentsService>(CommentsService);
@@ -62,7 +67,7 @@ describe('CommentsService', () => {
       };
 
       jest
-        .spyOn(commentsService['postService'], 'findOne')
+        .spyOn(commentsService['commentsService'], 'findOne')
         .mockResolvedValue(null);
 
       try {

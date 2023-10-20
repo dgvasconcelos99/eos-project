@@ -1,6 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { Repository, UpdateResult } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { UserEntity } from './entities/users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -13,7 +17,13 @@ export class UsersService {
   ) {}
 
   async create(user: CreateUserDto): Promise<UserEntity | undefined> {
-    return await this.userRepository.create(user);
+    const searchUser = await this.userRepository.findOne({
+      where: { email: user.email },
+    });
+
+    if (searchUser?.id) throw new NotFoundException('User already exists');
+
+    return await this.userRepository.save(user);
   }
 
   async update(
@@ -26,7 +36,7 @@ export class UsersService {
   async findOne(email: string): Promise<UserEntity> {
     return await this.userRepository.findOne({
       where: {
-        email,
+        email: email,
       },
     });
   }
@@ -37,5 +47,12 @@ export class UsersService {
         id: id,
       },
     });
+  }
+
+  async remove(id: string): Promise<DeleteResult> {
+    const searchUser = await this.findOneById(id);
+    if (!searchUser.id)
+      throw new UnauthorizedException('Operation not permitted');
+    return await this.userRepository.softDelete(id);
   }
 }

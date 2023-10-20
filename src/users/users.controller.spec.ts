@@ -4,6 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/entities/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
+import { UsersController } from './users.controller';
 
 describe('UsersService', () => {
   let usersService: UsersService;
@@ -18,6 +19,7 @@ describe('UsersService', () => {
           useClass: Repository,
         },
       ],
+      controllers: [UsersController],
     }).compile();
 
     usersService = module.get<UsersService>(UsersService);

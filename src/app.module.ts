@@ -1,15 +1,17 @@
 import { Module } from '@nestjs/common';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { PostsModule } from './posts/posts.module';
 import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
 import 'dotenv/config';
-import { UsersController } from './users/users.controller';
 import { UserEntity } from './users/entities/users.entity';
 import { ConfigModule } from '@nestjs/config';
-import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
+import { UsersController } from './users/users.controller';
+import { PostsController } from './posts/posts.controller';
+import { CommentsController } from './comments/comments.controller';
 
 @Module({
   imports: [
@@ -33,7 +35,12 @@ import { CommentsModule } from './comments/comments.module';
     PostsModule,
     CommentsModule,
   ],
-  controllers: [AppController, UsersController],
+  controllers: [
+    AppController,
+    UsersController,
+    PostsController,
+    CommentsController,
+  ],
   providers: [AppService],
 })
 export class AppModule {}

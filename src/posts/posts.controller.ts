@@ -6,14 +6,12 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
   Req,
   UnauthorizedException,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { ValidationPipe } from 'src/pipes/validation.pipe';
 
 @Controller('posts')
@@ -47,13 +45,11 @@ export class PostsController {
     return this.postsService.update(id, updatePostDto);
   }
 
-  @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Req() req, @Param('id') id: string) {
     return this.postsService.remove(id, req.user);
   }
 
-  @UseGuards(AuthGuard)
   @Post('like/:postId')
   likePost(@Req() req, @Param('postId') id: string) {
     return this.postsService.like(req.user, id);
